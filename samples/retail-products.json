@@ -1,0 +1,178 @@
+{
+  "description": "通用零售演示商品；售价与成本为演示设定，不代表市场报价。仅增量添加，不覆盖现有商品。",
+  "categories": [
+    { "code": "OFFICE", "name": "办公文具", "sort": 40 },
+    { "code": "SPORT", "name": "运动户外", "sort": 50 },
+    { "code": "CARE", "name": "个护清洁", "sort": 60 }
+  ],
+  "products": [
+    {
+      "code": "R101",
+      "name": "抽屉分隔收纳盒四件套",
+      "category": "日用百货",
+      "price": 39.9,
+      "costPrice": 18
+    },
+    {
+      "code": "R102",
+      "name": "双层玻璃随行杯450ml",
+      "category": "日用百货",
+      "price": 59,
+      "costPrice": 25
+    },
+    {
+      "code": "R103",
+      "name": "纯棉柔软毛巾三条装",
+      "category": "日用百货",
+      "price": 49.9,
+      "costPrice": 22
+    },
+    {
+      "code": "R104",
+      "name": "轻量折叠晴雨伞",
+      "category": "日用百货",
+      "price": 79,
+      "costPrice": 35
+    },
+    {
+      "code": "R201",
+      "name": "双模静音无线鼠标",
+      "category": "数码配件",
+      "price": 129,
+      "costPrice": 58
+    },
+    {
+      "code": "R202",
+      "name": "65W双口快充充电器",
+      "category": "数码配件",
+      "price": 169,
+      "costPrice": 82
+    },
+    {
+      "code": "R203",
+      "name": "铝合金折叠电脑支架",
+      "category": "数码配件",
+      "price": 99,
+      "costPrice": 43
+    },
+    {
+      "code": "R204",
+      "name": "无线降噪头戴耳机",
+      "category": "数码配件",
+      "price": 690,
+      "costPrice": 328
+    },
+    {
+      "code": "R301",
+      "name": "冻干草莓脆家庭装",
+      "category": "休闲食品",
+      "price": 29.9,
+      "costPrice": 14
+    },
+    {
+      "code": "R302",
+      "name": "原味海苔夹心脆",
+      "category": "休闲食品",
+      "price": 19.9,
+      "costPrice": 8
+    },
+    {
+      "code": "R303",
+      "name": "低糖燕麦能量棒六支装",
+      "category": "休闲食品",
+      "price": 35.9,
+      "costPrice": 16
+    },
+    {
+      "code": "R304",
+      "name": "混合果干分享礼盒",
+      "category": "休闲食品",
+      "price": 89,
+      "costPrice": 42
+    },
+    {
+      "code": "R401",
+      "name": "A5点阵笔记本双本装",
+      "category": "办公文具",
+      "price": 24.9,
+      "costPrice": 9
+    },
+    {
+      "code": "R402",
+      "name": "速干中性笔十支装",
+      "category": "办公文具",
+      "price": 15.9,
+      "costPrice": 5
+    },
+    {
+      "code": "R403",
+      "name": "桌面文件收纳架",
+      "category": "办公文具",
+      "price": 45,
+      "costPrice": 19
+    },
+    {
+      "code": "R404",
+      "name": "三档调光阅读台灯",
+      "category": "办公文具",
+      "price": 159,
+      "costPrice": 72
+    },
+    {
+      "code": "R501",
+      "name": "高密度瑜伽垫6mm",
+      "category": "运动户外",
+      "price": 119,
+      "costPrice": 52
+    },
+    {
+      "code": "R502",
+      "name": "轻量城市通勤背包20L",
+      "category": "运动户外",
+      "price": 189,
+      "costPrice": 86
+    },
+    {
+      "code": "R503",
+      "name": "便携计数跳绳",
+      "category": "运动户外",
+      "price": 39,
+      "costPrice": 15
+    },
+    {
+      "code": "R504",
+      "name": "户外折叠露营椅",
+      "category": "运动户外",
+      "price": 299,
+      "costPrice": 138
+    },
+    {
+      "code": "R601",
+      "name": "温和泡沫洗手液双瓶装",
+      "category": "个护清洁",
+      "price": 32.9,
+      "costPrice": 12
+    },
+    {
+      "code": "R602",
+      "name": "软毛旅行牙刷四支装",
+      "category": "个护清洁",
+      "price": 19.9,
+      "costPrice": 7
+    },
+    {
+      "code": "R603",
+      "name": "便携洁面巾三包装",
+      "category": "个护清洁",
+      "price": 29.9,
+      "costPrice": 11
+    },
+    {
+      "code": "R604",
+      "name": "衣物清洁凝珠三十颗装",
+      "category": "个护清洁",
+      "price": 59.9,
+      "costPrice": 26
+    }
+  ]
+}

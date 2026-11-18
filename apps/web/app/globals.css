@@ -1,0 +1,432 @@
+@import 'tailwindcss';
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* 方案C：品牌原色与语义令牌分离。文字使用较深的同色系，保证后台可读性。 */
+:root {
+  --brand-terracotta: #c7532e;
+  --brand-caramel: #b58636;
+  --brand-cream: #fff9ea;
+  --brand-beige: #f2e6d7;
+  --brand-sage: #8fa57a;
+  --brand-coffee: #3b2a1f;
+  --paper: #fbf2e7;
+  --surface: #fffcf6;
+  --sunken: #f2e6d7;
+  --ink: #3b2a1f;
+  --ink-muted: #786351;
+  --ink-faint: #927c68;
+  --line: #ead8c7;
+  --line-strong: #d7bba2;
+  --persimmon-tint: #f9e7d8;
+  --tea: #54704a;
+  --tea-tint: #edf2e7;
+  --ochre: #926821;
+  --ochre-tint: #f7edda;
+  --brick: #a84635;
+  --brick-tint: #f9e7e1;
+  --slate: #586f75;
+  --slate-tint: #eaf0f1;
+  --sidebar: #3b2a1f;
+  --sidebar-ink: #f1e3d1;
+  --sidebar-muted: #c6ac90;
+  --chart-1: #c7532e;
+  --chart-2: #b58636;
+  --chart-3: #8fa57a;
+  --chart-4: #7e9a9d;
+  --chart-5: #b18a9b;
+  --shadow-card: 0 2px 3px rgb(98 56 27 / 2%), 0 8px 24px -16px rgb(112 66 34 / 18%);
+  --shadow-overlay: 0 20px 70px -20px rgb(59 42 31 / 28%);
+  --shadow-button: inset 0 1px 0 rgb(255 249 234 / 16%), 0 3px 8px -4px rgb(151 62 30 / 45%);
+  --radius-control: 10px;
+  --radius-card: 16px;
+  --radius-dialog: 20px;
+}
+
+.dark {
+  --paper: #211a16;
+  --surface: #2b221c;
+  --sunken: #352a22;
+  --ink: #f5e8d8;
+  --ink-muted: #c9b49c;
+  --ink-faint: #ac9680;
+  --line: #4c3c2f;
+  --line-strong: #6b5240;
+  --persimmon-tint: #472d21;
+  --tea: #afc49d;
+  --tea-tint: #2d3828;
+  --ochre: #dfb56c;
+  --ochre-tint: #443622;
+  --brick: #eca18b;
+  --brick-tint: #472b24;
+  --slate: #aec0c3;
+  --slate-tint: #2c373a;
+  --sidebar: #291e17;
+  --sidebar-ink: #f1e3d1;
+  --sidebar-muted: #bea58c;
+  --chart-1: #e48b66;
+  --chart-2: #d7ad61;
+  --chart-3: #abc293;
+  --chart-4: #9ebabe;
+  --chart-5: #c5a6b5;
+  --shadow-card: 0 3px 18px -10px rgb(0 0 0 / 35%);
+  --shadow-overlay: 0 20px 70px -20px rgb(0 0 0 / 55%);
+}
+
+:root {
+  color: var(--ink);
+  background: var(--paper);
+  font-family:
+    'Segoe UI Variable Text', 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+    system-ui, sans-serif;
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+}
+* {
+  box-sizing: border-box;
+}
+html.dark {
+  color-scheme: dark;
+}
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+html.dark body {
+  color: var(--ink);
+  background: var(--paper);
+}
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+button,
+a,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+input[type='checkbox'],
+input[type='radio'] {
+  accent-color: var(--brand-terracotta);
+}
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+  cursor: not-allowed;
+}
+input::placeholder,
+textarea::placeholder {
+  opacity: 1;
+}
+:where(
+  a:not(.brand-button),
+  button:not(.brand-button),
+  input:not(.brand-control),
+  select:not(.brand-control),
+  textarea
+):focus-visible {
+  outline: 2px solid var(--brand-terracotta);
+  outline-offset: 3px;
+}
+::selection {
+  background: var(--persimmon-tint);
+  color: var(--ink);
+}
+
+.retail-workspace {
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(1000px 440px at 90% -12%, rgb(242 204 171 / 29%), transparent 65%),
+    linear-gradient(180deg, rgb(255 249 234 / 22%), transparent 360px);
+}
+.dark .retail-workspace {
+  background-image: none;
+}
+.brand-card {
+  background-image: linear-gradient(145deg, rgb(255 249 234 / 25%), transparent 55%);
+}
+.dark .brand-card {
+  background-image: none;
+}
+.brand-control:disabled {
+  opacity: 0.55;
+  background-color: var(--sunken);
+}
+.brand-table {
+  background: var(--surface);
+}
+table {
+  font-variant-numeric: tabular-nums;
+}
+table tbody tr {
+  transition: background-color 0.15s ease;
+}
+table tbody tr:hover {
+  background: color-mix(in srgb, var(--persimmon-tint) 45%, transparent);
+}
+.brand-table thead {
+  box-shadow: inset 0 -1px 0 var(--line);
+}
+.brand-table th {
+  letter-spacing: 0.015em;
+}
+.brand-table :where(input[type='checkbox']) {
+  border-radius: 4px;
+}
+.brand-page-header h1 {
+  font-weight: 650;
+}
+.brand-page-header h1::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 0.8em;
+  margin-right: 10px;
+  border-radius: 3px;
+  background: var(--brand-terracotta);
+  vertical-align: -0.015em;
+}
+
+/* 固定原导航宽度、层级与滚动区域，只替换视觉。 */
+.sidebar-healing {
+  color: var(--sidebar-ink);
+  background:
+    radial-gradient(140% 45% at 25% -5%, rgb(161 94 49 / 25%), transparent 75%),
+    linear-gradient(180deg, #493023 0%, var(--sidebar) 46%, #332319 100%);
+  box-shadow: 3px 0 20px -14px rgb(59 42 31 / 50%);
+  color-scheme: dark;
+  scrollbar-color: #8e6b50 transparent;
+}
+.dark .sidebar-healing {
+  background: var(--sidebar);
+}
+.brand-sidebar-logo {
+  border-color: rgb(247 223 196 / 14%);
+}
+.brand-logo-mark {
+  color: var(--brand-cream);
+  background: linear-gradient(145deg, #d77142, var(--brand-terracotta));
+  border: 1px solid rgb(255 226 186 / 25%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 20%),
+    0 4px 12px rgb(44 24 13 / 18%);
+}
+.brand-sidebar-title {
+  color: var(--sidebar-ink);
+}
+.brand-sidebar-caption,
+.brand-sidebar-group {
+  color: var(--sidebar-muted);
+}
+.brand-nav-link {
+  color: #e5cfb8;
+  border: 1px solid transparent;
+}
+.brand-nav-link:hover {
+  color: #fff5e8;
+  background: rgb(255 236 210 / 7%);
+}
+.brand-nav-link[aria-current='page'] {
+  color: #fff9ea;
+  background: linear-gradient(110deg, #c7532e, #ac4729);
+  border-color: #d47b4b;
+  box-shadow:
+    inset 0 1px 0 rgb(255 237 207 / 12%),
+    0 4px 10px -6px rgb(0 0 0 / 40%);
+}
+.brand-nav-link:focus-visible {
+  outline-color: #f0ba8b;
+}
+.brand-topbar {
+  background: color-mix(in srgb, var(--surface) 96%, transparent);
+  box-shadow: 0 2px 10px -9px rgb(94 60 36 / 25%);
+}
+.brand-avatar {
+  border: 1px solid var(--line);
+  box-shadow: inset 0 1px 0 rgb(255 249 234 / 40%);
+}
+
+.chart-tooltip {
+  border-radius: 12px !important;
+  border: 1px solid var(--line) !important;
+  box-shadow: var(--shadow-card);
+}
+.recharts-default-tooltip {
+  background-color: var(--surface) !important;
+  border-color: var(--line) !important;
+  color: var(--ink) !important;
+  border-radius: 12px;
+  box-shadow: var(--shadow-card);
+}
+.recharts-tooltip-label {
+  color: var(--ink);
+}
+.recharts-cartesian-axis-tick text {
+  fill: var(--ink-muted);
+}
+.recharts-cartesian-grid line {
+  stroke: var(--line);
+}
+.brand-kpi {
+  position: relative;
+  overflow: hidden;
+}
+.brand-kpi::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  inset: auto -10px -38px auto;
+  width: 110px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--persimmon-tint);
+  opacity: 0.35;
+}
+.brand-kpi-value {
+  position: relative;
+  z-index: 1;
+  font-weight: 650;
+}
+.brand-agent-avatar {
+  object-fit: contain;
+  filter: drop-shadow(0 3px 3px rgb(151 78 35 / 10%));
+}
+.brand-agent-prompt {
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+  transition:
+    border-color 0.15s,
+    background-color 0.15s;
+}
+.brand-agent-prompt:hover {
+  background: var(--persimmon-tint);
+}
+.brand-login {
+  --ink: #3b2a1f;
+  --ink-muted: #786351;
+  --ink-faint: #927c68;
+}
+/* 光束仅在登录上半区：稍暖的环境底色衬出窗缝间的明暗层次。 */
+.brand-login-scene {
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at 0% 0%, #fff9de 0%, transparent 60%),
+    linear-gradient(115deg, #f8ebd7 0%, #ecd8b9 54%, #f5e6cc 100%);
+}
+.brand-login-scene::before {
+  content: '';
+  pointer-events: none;
+  position: absolute;
+  inset: -2%;
+  /* 从左上方入射，所有亮带沿右下方延伸，与小屋左窗光源一致。 */
+  background: conic-gradient(
+    from 90deg at -8% -20%,
+    transparent 0deg,
+    transparent 10deg,
+    rgb(255 255 237 / 90%) 14deg,
+    rgb(255 255 237 / 82%) 18deg,
+    transparent 22deg,
+    transparent 24deg,
+    rgb(255 255 237 / 96%) 28deg,
+    rgb(255 255 237 / 90%) 32deg,
+    transparent 36deg,
+    transparent 39deg,
+    rgb(255 253 225 / 90%) 43deg,
+    rgb(255 255 237 / 68%) 47deg,
+    transparent 51deg,
+    transparent 360deg
+  );
+  filter: blur(5px);
+  mask-image: linear-gradient(
+    135deg,
+    rgb(0 0 0 / 85%),
+    #000 35%,
+    rgb(0 0 0 / 70%) 75%,
+    transparent
+  );
+}
+
+@keyframes login-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-9px);
+  }
+}
+.login-float {
+  animation: login-float 5.5s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .login-float,
+  .animate-pulse,
+  .animate-spin {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@theme {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-sunken: var(--sunken);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-tea: var(--tea);
+  --color-tea-tint: var(--tea-tint);
+  --color-ochre: var(--ochre);
+  --color-ochre-tint: var(--ochre-tint);
+  --color-brick: var(--brick);
+  --color-brick-tint: var(--brick-tint);
+  --color-slate-tone: var(--slate);
+  --color-slate-tint: var(--slate-tint);
+  --color-red-600: var(--brick);
+  --color-emerald-100: var(--tea-tint);
+  --color-emerald-800: var(--tea);
+  --color-brand: var(--brand-terracotta);
+  --color-brand-gold: var(--brand-caramel);
+  --color-brand-sage: var(--brand-sage);
+  --color-orange-50: #fcf0e5;
+  --color-orange-100: #f6e1cf;
+  --color-orange-200: #f0ccaf;
+  --color-orange-300: #e8af8c;
+  --color-orange-400: #de936c;
+  --color-orange-500: #d9764f;
+  --color-orange-600: #c7532e;
+  --color-orange-700: #c7532e;
+  --color-orange-800: #a9472a;
+  --color-orange-900: #863b28;
+  --color-orange-950: #3b2a1f;
+}
+
+/* 窄屏保持表格文字横向阅读，由原overflow容器承载滚动。 */
+@media (max-width: 639px) {
+  .brand-table table:has(th:nth-child(5)) {
+    min-width: 760px;
+  }
+  .brand-table table:has(th:nth-child(5)) td {
+    white-space: nowrap;
+  }
+}
+
+@keyframes brand-pet-breathe {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-4px) rotate(1deg); }
+}
+.brand-pet-sprite { animation: brand-pet-breathe 5s ease-in-out infinite; transform-origin: bottom center; }
+.brand-pet-body:active .brand-pet-sprite { animation-play-state: paused; }
+.brand-pet[data-paused='true'] .brand-pet-sprite { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .brand-pet * { animation: none !important; transition: none !important; }
+}

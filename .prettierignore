@@ -1,0 +1,19 @@
+# 依赖与构建产物
+node_modules
+.next
+dist
+coverage
+
+# 锁文件与生成文件
+pnpm-lock.yaml
+package-lock.json
+apps/web/next-env.d.ts
+
+# 数据库迁移（保持生成时的原样）
+apps/api/prisma/migrations
+
+# 静态资源
+*.webp
+*.png
+*.jpg
+*.ico

@@ -1,0 +1,1 @@
+ALTER TABLE "AgentConversation" ADD COLUMN "state" JSONB NOT NULL DEFAULT '{}', ADD COLUMN "leaseToken" TEXT, ADD COLUMN "leaseUntil" TIMESTAMP(3);

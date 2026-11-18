@@ -115,7 +115,7 @@ Next.js 负责页面和渲染；NestJS 是统一业务 API。业务数据库与�
 
 ## 目录结构
 
-以下是完整项目源码的目录。
+以下是公开版源码的目录。
 
 ```text
 apps/
@@ -138,22 +138,20 @@ apps/
     src/lib/                API 与业务辅助逻辑
     src/store/              登录与全局状态
 infra/                      本地基础服务与独立知识库配置
-deploy/demo/                云端独立演示、恢复和验收
 samples/                    CSV 与商品样例
-docs/                       业务规则、交付记录与源码说明
 ```
 
 ## 本地运行
-
-以下流程适用于已获取完整源码的读者。此展示仓库提供项目说明和演示视频。
 
 环境：Node.js 24、pnpm 11.20.0、Docker。以下使用 Bash；Windows 可在 Git Bash 中执行。
 
 ### 1. 安装与配置
 
-进入完整项目的根目录后执行：
+克隆仓库并安装依赖：
 
 ```bash
+git clone https://github.com/MMMMMrClown/commerce-assistant-showcase.git
+cd commerce-assistant-showcase
 corepack enable
 corepack prepare pnpm@11.20.0 --activate
 pnpm install --frozen-lockfile
@@ -202,7 +200,7 @@ pnpm dev
 
 ### 4. 启用 Agent
 
-在 `apps/api/.env` 配置：
+**公开版保留了 Agent 模型接入代码，仅提供配置模板，未附带任何模型 API Key。** 配置模板为 [apps/api/.env.example](apps/api/.env.example)，各模型 Key 默认为空。商品、会员和订单等后台功能可独立运行。需要调用真实模型时，在本机的 `apps/api/.env` 填写自己的 Key，并重启 API。
 
 | 变量                                             | 作用                         |
 | ------------------------------------------------ | ---------------------------- |
@@ -213,7 +211,19 @@ pnpm dev
 | `AGENT_WRITES_ENABLED`                           | 是否允许生成并执行受控写操作 |
 | `MOCK_PAYMENTS_ENABLED`                          | 是否开启模拟支付与退款       |
 
-独立知识库配置见 `infra/agent-knowledge.compose.yaml`。启动并配置后，执行 `pnpm --filter api agent:knowledge:ingest` 摄入预设规则。当前实现不需要运行 Ollama。
+只体验 Agent 对话和业务工具时，先配置对话模型即可。体验规则检索时，再启动独立知识库：
+
+```bash
+mkdir -p .local-dev
+cp infra/agent-knowledge.env.example .local-dev/agent-knowledge.env
+```
+
+填写 `.local-dev/agent-knowledge.env` 的数据库密码，并将 `apps/api/.env` 的 `KNOWLEDGE_DATABASE_URL` 配置为对应连接地址。之后启动容器并导入规则。
+
+```bash
+docker compose --env-file .local-dev/agent-knowledge.env -f infra/agent-knowledge.compose.yaml up -d
+pnpm --filter api agent:knowledge:ingest
+```
 
 ## 当前边界
 

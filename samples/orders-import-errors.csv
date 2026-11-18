@@ -1,0 +1,2 @@
+orderNo,storeCode,orderedAt,status,productCode,quantity,unitPrice,discountAmount,paidAmount
+,UNKNOWN,not-a-date,PAID,P999,-1,abc,0,-10

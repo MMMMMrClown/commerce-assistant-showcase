@@ -1,0 +1,629 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum DataScope {
+  ALL
+  REGION
+  STORE
+}
+
+enum OrderStatus {
+  PENDING_PAYMENT
+  PAID
+  COMPLETED
+  CANCELED
+  REFUNDED
+}
+
+enum MemberTier {
+  STANDARD
+  SPROUT
+  VIP
+  GOLD
+  PLATINUM
+  DIAMOND
+}
+
+enum BenefitLedgerKind {
+  PAYMENT
+  REFUND
+}
+
+enum CouponStatus {
+  AVAILABLE
+  RESERVED
+  USED
+  VOID
+}
+
+enum OrderSource {
+  LEGACY
+  CSV_IMPORT
+  BACKOFFICE
+}
+
+enum ImportStatus {
+  PREVIEW
+  READY
+  IMPORTED
+  FAILED
+}
+
+model User {
+  id            String               @id @default(cuid())
+  username      String               @unique
+  passwordHash  String
+  name          String
+  email         String?              @unique
+  phone         String?
+  enabled       Boolean              @default(true)
+  regionId      String?
+  storeId       String?
+  region        Region?              @relation(fields: [regionId], references: [id])
+  store         Store?               @relation("UserStoreScope", fields: [storeId], references: [id])
+  roles         UserRole[]
+  managedStores Store[]              @relation("StoreManager")
+  imports       DataImport[]
+  logs          OperationLog[]
+  createdOrders Order[]              @relation("OrderCreator")
+  benefitAudits MemberBenefitAudit[]
+  issuedCoupons MemberCoupon[]
+  couponBatches CouponIssueBatch[]
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+}
+
+model Role {
+  id          String           @id @default(cuid())
+  code        String           @unique
+  name        String
+  description String?
+  dataScope   DataScope        @default(ALL)
+  enabled     Boolean          @default(true)
+  users       UserRole[]
+  permissions RolePermission[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+model Permission {
+  id        String           @id @default(cuid())
+  code      String           @unique
+  name      String
+  type      String
+  path      String?
+  roles     RolePermission[]
+  createdAt DateTime         @default(now())
+}
+
+model UserRole {
+  userId String
+  roleId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role   Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+}
+
+model Region {
+  id        String   @id @default(cuid())
+  code      String   @unique
+  name      String
+  enabled   Boolean  @default(true)
+  stores    Store[]
+  users     User[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Store {
+  id          String    @id @default(cuid())
+  code        String    @unique
+  name        String
+  regionId    String
+  region      Region    @relation(fields: [regionId], references: [id])
+  address     String
+  managerId   String?
+  manager     User?     @relation("StoreManager", fields: [managerId], references: [id])
+  scopedUsers User[]    @relation("UserStoreScope")
+  phone       String?
+  enabled     Boolean   @default(true)
+  openedAt    DateTime
+  orders      Order[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+}
+
+model ProductCategory {
+  id        String    @id @default(cuid())
+  code      String    @unique
+  name      String
+  sort      Int       @default(0)
+  enabled   Boolean   @default(true)
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Product {
+  id                String            @id @default(cuid())
+  code              String            @unique
+  name              String
+  categoryId        String
+  category          ProductCategory   @relation(fields: [categoryId], references: [id])
+  price             Decimal           @db.Decimal(12, 2)
+  costPrice         Decimal           @db.Decimal(12, 2)
+  imageUrl          String?
+  enabled           Boolean           @default(true)
+  stockOnHand       Int?
+  stockReserved     Int               @default(0)
+  stockVersion      Int               @default(0)
+  stockWarning      Int               @default(0)
+  stockHolds        ProductStockHold[]
+  stockMovements    ProductStockMovement[]
+  orderItems        OrderItem[]
+  seckillActivities SeckillActivity[]
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  deletedAt         DateTime?
+}
+
+model Order {
+  id                 String                @id @default(cuid())
+  orderNo            String                @unique
+  storeId            String
+  store              Store                 @relation(fields: [storeId], references: [id])
+  orderedAt          DateTime
+  status             OrderStatus
+  source             OrderSource           @default(LEGACY)
+  memberId           String?
+  member             Member?               @relation(fields: [memberId], references: [id], onDelete: Restrict)
+  createdById        String?
+  createdBy          User?                 @relation("OrderCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  requestId          String?
+  requestHash        String?
+  originalAmount     Decimal               @db.Decimal(12, 2)
+  discountAmount     Decimal               @default(0) @db.Decimal(12, 2)
+  payableAmount      Decimal               @default(0) @db.Decimal(12, 2)
+  paidAmount         Decimal               @db.Decimal(12, 2)
+  canceledAt         DateTime?
+  shippedAt          DateTime?
+  shippedById        String?
+  shippedByName      String?
+  receivedAt         DateTime?
+  receivedById       String?
+  receivedByName     String?
+  benefitSnapshot    Json?
+  couponSnapshot     Json?
+  seckillSnapshot    Json?
+  expiresAt          DateTime?
+  seckillReservation SeckillReservation?
+  reservedCoupon     MemberCoupon?
+  benefitEntries     MemberBenefitLedger[]
+  payment            PaymentRecord?
+  refund             RefundRecord?
+  items              OrderItem[]
+  importId           String?
+  dataImport         DataImport?           @relation(fields: [importId], references: [id])
+  createdAt          DateTime              @default(now())
+  updatedAt          DateTime              @updatedAt
+  deletedAt          DateTime?
+
+  @@unique([createdById, requestId])
+  @@index([orderedAt])
+  @@index([storeId, orderedAt])
+  @@index([memberId, orderedAt])
+  @@index([status, expiresAt])
+}
+
+// 【支付记录】本地渠道一单一个支付主体；失败重试增加attempt，旧通知不得覆盖新尝试。
+model PaymentRecord {
+  id        String        @id @default(cuid())
+  orderId   String        @unique
+  order     Order         @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  channel   String        @default("MOCK")
+  amount    Decimal       @db.Decimal(12, 2)
+  status    String        @default("PENDING")
+  attempt   Int           @default(1)
+  actorId   String
+  paidAt    DateTime?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  refund    RefundRecord?
+}
+
+// 【整单退款】每笔支付最多一个退款主体，保留原实付和退款金额供审计。
+model RefundRecord {
+  id         String        @id @default(cuid())
+  orderId    String        @unique
+  order      Order         @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  paymentId  String        @unique
+  payment    PaymentRecord @relation(fields: [paymentId], references: [id], onDelete: Restrict)
+  amount     Decimal       @db.Decimal(12, 2)
+  reason     String
+  actorId    String
+  status     String        @default("PENDING")
+  attempt    Int           @default(1)
+  refundedAt DateTime?
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+}
+
+// 【通知去重与追踪】只保存已完成业务处理的事件；失败事务不会留下虚假成功标记。
+model PaymentEvent {
+  id        String   @id
+  orderId   String
+  kind      String
+  attempt   Int
+  outcome   String
+  amount    Decimal  @db.Decimal(12, 2)
+  createdAt DateTime @default(now())
+
+  @@index([orderId, createdAt])
+}
+
+model OrderItem {
+  id          String   @id @default(cuid())
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id])
+  productName String?
+  productCode String?
+  quantity    Int
+  unitPrice   Decimal  @db.Decimal(12, 2)
+  subtotal    Decimal  @db.Decimal(12, 2)
+  createdAt   DateTime @default(now())
+}
+
+model DataImport {
+  id          String            @id @default(cuid())
+  fileName    String
+  status      ImportStatus      @default(PREVIEW)
+  totalRows   Int               @default(0)
+  successRows Int               @default(0)
+  failedRows  Int               @default(0)
+  previewData Json?
+  validData   Json?
+  createdById String
+  createdBy   User              @relation(fields: [createdById], references: [id])
+  errors      DataImportError[]
+  orders      Order[]
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+}
+
+model DataImportError {
+  id         String     @id @default(cuid())
+  importId   String
+  dataImport DataImport @relation(fields: [importId], references: [id], onDelete: Cascade)
+  rowNo      Int
+  field      String?
+  message    String
+  rawData    Json?
+}
+
+model MetricDefinition {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  name        String
+  description String
+  formula     String
+  enabled     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model OperationLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  module    String
+  action    String
+  method    String
+  path      String
+  ip        String?
+  success   Boolean  @default(true)
+  error     String?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+model Member {
+  avatarUrl String?
+  birthday String?
+  birthdayChangedYear Int?
+  marketingGrants MarketingGrant[]
+  id                  String                @id @default(cuid())
+  name                String
+  phone               String                @unique
+  enabled             Boolean               @default(true)
+  tierOverride        MemberTier?
+  totalSpent          Decimal               @default(0) @db.Decimal(14, 2)
+  points              Int                   @default(0)
+  benefitEntries      MemberBenefitLedger[]
+  benefitAudits       MemberBenefitAudit[]
+  orders              Order[]
+  coupons             MemberCoupon[]
+  seckillReservations SeckillReservation[]
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+}
+
+// 券模板固定规则；会员券记录领取人、发券人及当前占用订单。
+// 【秒杀活动】独立活动名额，不修改普通商品库存；发布后固定价格、时间和总量。
+model SeckillActivity {
+  id             String               @id @default(cuid())
+  name           String
+  productId      String
+  product        Product              @relation(fields: [productId], references: [id], onDelete: Restrict)
+  price          Decimal              @db.Decimal(12, 2)
+  stock          Int
+  remainingStock Int
+  startsAt       DateTime
+  endsAt         DateTime
+  holdMinutes    Int                  @default(5)
+  enabled        Boolean              @default(true)
+  reservations   SeckillReservation[]
+  createdAt      DateTime             @default(now())
+}
+
+// 【名额占用记录】取消/到期保留历史；仅有效占用参与每会员限购。
+model SeckillReservation {
+  id         String          @id @default(cuid())
+  activityId String
+  activity   SeckillActivity @relation(fields: [activityId], references: [id], onDelete: Restrict)
+  memberId   String
+  member     Member          @relation(fields: [memberId], references: [id], onDelete: Restrict)
+  orderId    String          @unique
+  order      Order           @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  status     String          @default("RESERVED")
+  releasedAt DateTime?
+  createdAt  DateTime        @default(now())
+
+  @@index([activityId, memberId, status])
+}
+
+model CouponTemplate {
+  id             String             @id @default(cuid())
+  name           String
+  minimumSpend   Decimal            @db.Decimal(10, 2)
+  discountAmount Decimal            @db.Decimal(10, 2)
+  startsAt       DateTime
+  endsAt         DateTime
+  version        Int                @default(1)
+  deletedAt      DateTime?
+  batches        CouponIssueBatch[]
+  coupons        MemberCoupon[]
+  createdAt      DateTime           @default(now())
+}
+
+model MemberCoupon {
+  id         String            @id @default(cuid())
+  memberId   String
+  member     Member            @relation(fields: [memberId], references: [id], onDelete: Restrict)
+  templateId String
+  template   CouponTemplate    @relation(fields: [templateId], references: [id], onDelete: Restrict)
+  issuedById String
+  issuedBy   User              @relation(fields: [issuedById], references: [id], onDelete: Restrict)
+  requestId  String
+  batchId    String?
+  batch      CouponIssueBatch? @relation(fields: [batchId], references: [id], onDelete: Restrict)
+  status     CouponStatus      @default(AVAILABLE)
+  orderId    String?           @unique
+  order      Order?            @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  reservedAt DateTime?
+  usedAt     DateTime?
+  createdAt  DateTime          @default(now())
+
+  @@unique([issuedById, requestId])
+  @@unique([batchId, memberId])
+  @@index([memberId, status])
+}
+
+model CouponIssueBatch {
+  id         String         @id @default(cuid())
+  issuedById String
+  issuedBy   User           @relation(fields: [issuedById], references: [id], onDelete: Restrict)
+  requestId  String
+  templateId String
+  template   CouponTemplate @relation(fields: [templateId], references: [id], onDelete: Restrict)
+  targetHash String
+  count      Int
+  coupons    MemberCoupon[]
+  createdAt  DateTime       @default(now())
+
+  @@unique([issuedById, requestId])
+}
+
+model MemberBenefitPolicy {
+  id        String   @id @default("default")
+  enabled   Boolean  @default(true)
+  tiers     Json
+  version   Int      @default(1)
+  updatedAt DateTime @updatedAt
+}
+
+model MemberBenefitAudit {
+  id        String   @id @default(cuid())
+  memberId  String?
+  member    Member?  @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  actorId   String?
+  actor     User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  action    String
+  reason    String
+  before    Json
+  after     Json
+  createdAt DateTime @default(now())
+
+  @@index([memberId, createdAt])
+}
+
+model MemberBenefitLedger {
+  id          String            @id @default(cuid())
+  memberId    String
+  member      Member            @relation(fields: [memberId], references: [id], onDelete: Restrict)
+  orderId     String
+  order       Order             @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  kind        BenefitLedgerKind
+  amount      Decimal           @db.Decimal(12, 2)
+  pointsDelta Int
+  ruleVersion Int
+  createdAt   DateTime          @default(now())
+
+  @@unique([orderId, kind])
+  @@index([memberId, createdAt])
+}
+
+// 【运营会话】账号隔离，版本字段防止并发覆盖历史。
+model AgentConversation {
+  state Json @default("{}")
+  leaseToken String?
+  leaseUntil DateTime?
+  id String @id @default(cuid())
+  userId String
+  title String @default("新会话")
+  messages Json @default("[]")
+  version Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([userId, updatedAt])
+}
+
+model AgentRun {
+ id String @id @default(cuid())
+ userId String
+ conversationId String
+ status String @default("RUNNING")
+ state Json @default("{}")
+ version Int @default(0)
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@index([userId, conversationId])
+}
+model AgentDraft {
+ id String @id @default(cuid())
+ userId String
+ conversationId String
+ runId String
+ input Json
+ quote Json
+ quoteHash String
+ expiresAt DateTime
+ version Int @default(0)
+ createdAt DateTime @default(now())
+}
+model AgentAction {
+ id String @id @default(cuid())
+ userId String
+ conversationId String
+ runId String
+ draftId String?
+ kind String
+ payload Json
+ payloadHash String
+ status String @default("WAITING_CONFIRMATION")
+ requestId String @unique
+ result Json?
+ errorCode String?
+ expiresAt DateTime
+ approvedAt DateTime?
+ leaseUntil DateTime?
+ version Int @default(0)
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@index([userId, conversationId, status])
+}
+model AgentToolInvocation {
+ id String @id @default(cuid())
+ runId String
+ actorId String
+ toolName String
+ success Boolean
+ createdAt DateTime @default(now())
+}
+model AgentAuditOutbox {
+ id String @id @default(cuid())
+ actionId String
+ eventType String
+ actorId String
+ delivered Boolean @default(false)
+ createdAt DateTime @default(now())
+ @@unique([actionId,eventType])
+}
+
+// 单逻辑仓库；仅新建订单生成占用，历史订单不倒推库存。
+model ProductStockHold {
+ id String @id @default(cuid())
+ orderId String
+ productId String
+ product Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+ quantity Int
+ status String @default("RESERVED")
+ @@unique([orderId, productId])
+}
+model ProductStockMovement {
+ id String @id @default(cuid())
+ productId String
+ product Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+ orderId String?
+ actorId String
+ reason String
+ kind String
+ beforeOnHand Int?
+ afterOnHand Int
+ beforeReserved Int
+ afterReserved Int
+ requestId String? @unique
+ requestHash String?
+ createdAt DateTime @default(now())
+ @@index([productId, createdAt])
+}
+
+
+// 两种固定玩法，默认关闭；模板版本随资格记录冻结。
+model MarketingProgram {
+ kind String @id
+ enabled Boolean @default(false)
+ templateId String?
+ actorId String?
+ version Int @default(1)
+ updatedAt DateTime @updatedAt
+ grants MarketingGrant[]
+}
+model MarketingGrant {
+ id String @id @default(cuid())
+ kind String
+ program MarketingProgram @relation(fields:[kind], references:[kind], onDelete:Restrict)
+ memberId String
+ member Member @relation(fields:[memberId], references:[id], onDelete:Restrict)
+ period String
+ templateId String
+ originalTemplateId String
+ programVersion Int
+ status String @default("PENDING")
+ attempts Int @default(0)
+ couponId String? @unique
+ lastError String?
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@unique([kind,memberId,period])
+ @@index([status,createdAt])
+}

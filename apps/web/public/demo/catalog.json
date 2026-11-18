@@ -1,0 +1,120 @@
+[
+  {
+    "name": "便携午餐盒",
+    "imageUrl": "/demo/products/placeholder.svg"
+  },
+  {
+    "name": "透明玻璃杯",
+    "imageUrl": "/demo/products/placeholder.svg"
+  },
+  {
+    "name": "碳钢炒锅",
+    "imageUrl": "/demo/products/placeholder.svg"
+  },
+  {
+    "name": "竹制锅铲",
+    "imageUrl": "/demo/products/placeholder.svg"
+  },
+  {
+    "name": "无线蓝牙耳机",
+    "imageUrl": "/demo/products/placeholder.svg"
+  },
+  {
+    "name": "手机充电器",
+    "imageUrl": "/demo/products/placeholder.svg"
+  },
+  {
+    "name": "磁吸移动电源",
+    "imageUrl": "/demo/products/placeholder.svg"
+  },
+  {
+    "name": "伸缩自拍杆",
+    "imageUrl": "/demo/products/placeholder.svg"
+  },
+  {
+    "name": "天然蜂蜜",
+    "imageUrl": "/demo/products/placeholder.svg"
+  },
+  {
+    "name": "杏仁冰淇淋",
+    "imageUrl": "/demo/products/placeholder.svg"
+  },
+  {
+    "name": "鲜果汁",
+    "imageUrl": "/demo/products/placeholder.svg"
+  },
+  {
+    "name": "即溶咖啡",
+    "imageUrl": "/demo/products/placeholder.svg"
+  },
+  {
+    "name": "随身笔记本",
+    "imageUrl": "/demo/products/product-13.webp",
+    "source": "https://upload.wikimedia.org/wikipedia/commons/7/76/Spiral-bound_notebooks.JPG",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Spiral-bound_notebooks.JPG",
+    "credit": "Mk2010",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "processing": "Resized within 480x480 and converted to WebP; content unchanged"
+  },
+  {
+    "name": "圆珠笔",
+    "imageUrl": "/demo/products/product-14.webp",
+    "source": "https://upload.wikimedia.org/wikipedia/commons/0/0f/Two_promotional_ballpoint_pens_from_the_German_fur_industry.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Two_promotional_ballpoint_pens_from_the_German_fur_industry.jpg",
+    "credit": "<a href=\"//commons.wikimedia.org/wiki/User:K%C3%BCrschner\" title=\"User:Kürschner\">Kürschner</a> (<a href=\"//commons.wikimedia.org/wiki/User_talk:K%C3%BCrschner\" title=\"User talk:Kürschner\"><span class=\"signature-talk\">talk</span></a>) 07:32, 31 March 2026 (UTC)",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "processing": "Resized within 480x480 and converted to WebP; content unchanged"
+  },
+  {
+    "name": "办公文件夹",
+    "imageUrl": "/demo/products/product-15.webp",
+    "source": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/34/File-folders.jpg/500px-File-folders.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:File-folders.jpg",
+    "credit": "<a rel=\"nofollow\" class=\"external text\" href=\"http://www.shoplet.com\">Shoplet Office Supplies</a>",
+    "license": "CC BY-SA 3.0",
+    "processing": "Resized within 480x480 and converted to WebP; content unchanged"
+  },
+  {
+    "name": "彩色便签纸",
+    "imageUrl": "/demo/products/product-16.webp",
+    "source": "https://upload.wikimedia.org/wikipedia/commons/2/2b/Post_it_notes.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Post_it_notes.jpg",
+    "credit": "<a href=\"//commons.wikimedia.org/wiki/User:EraserGirl\" title=\"User:EraserGirl\">EraserGirl</a>",
+    "license": "Public domain",
+    "processing": "Resized within 480x480 and converted to WebP; content unchanged"
+  },
+  {
+    "name": "训练足球",
+    "imageUrl": "/demo/products/placeholder.svg"
+  },
+  {
+    "name": "标准篮球",
+    "imageUrl": "/demo/products/placeholder.svg"
+  },
+  {
+    "name": "网球拍",
+    "imageUrl": "/demo/products/placeholder.svg"
+  },
+  {
+    "name": "羽毛球",
+    "imageUrl": "/demo/products/placeholder.svg"
+  },
+  {
+    "name": "植物洗手液",
+    "imageUrl": "/demo/products/placeholder.svg"
+  },
+  {
+    "name": "滋润沐浴露",
+    "imageUrl": "/demo/products/placeholder.svg"
+  },
+  {
+    "name": "保湿身体乳",
+    "imageUrl": "/demo/products/placeholder.svg"
+  },
+  {
+    "name": "盒装抽纸",
+    "imageUrl": "/demo/products/placeholder.svg"
+  }
+]

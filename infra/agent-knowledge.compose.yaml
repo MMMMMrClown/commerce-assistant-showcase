@@ -1,0 +1,20 @@
+name: retail-agent-knowledge
+services:
+  agent-knowledge:
+    image: pgvector/pgvector:pg17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: agent_knowledge
+      POSTGRES_DB: agent_knowledge
+      POSTGRES_PASSWORD: ${KNOWLEDGE_PASSWORD:?Configure local knowledge environment}
+    ports:
+      - '127.0.0.1:55433:5432'
+    volumes:
+      - agent_knowledge_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U agent_knowledge -d agent_knowledge']
+      interval: 5s
+      timeout: 3s
+      retries: 20
+volumes:
+  agent_knowledge_data:

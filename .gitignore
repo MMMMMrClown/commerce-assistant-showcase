@@ -1,0 +1,23 @@
+node_modules/
+.pnpm-store/
+dist/
+.next/
+coverage/
+.env
+apps/*/.env
+apps/*/.env.local
+deploy/.env.local
+*.log
+.DS_Store
+.idea/
+.vscode/
+apps/api/prisma/dev.db
+apps/web/playwright-report/
+apps/web/test-results/
+.local-backups/
+.local-dev/
+*.tsbuildinfo
+
+# 本机环境配置
+.env.*
+!.env.example

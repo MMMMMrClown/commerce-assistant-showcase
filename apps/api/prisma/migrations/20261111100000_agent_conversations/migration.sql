@@ -1,0 +1,2 @@
+CREATE TABLE "AgentConversation" ("id" TEXT NOT NULL, "userId" TEXT NOT NULL, "title" TEXT NOT NULL DEFAULT '新会话', "messages" JSONB NOT NULL DEFAULT '[]', "version" INTEGER NOT NULL DEFAULT 0, "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP(3) NOT NULL, CONSTRAINT "AgentConversation_pkey" PRIMARY KEY ("id"));
+CREATE INDEX "AgentConversation_userId_updatedAt_idx" ON "AgentConversation"("userId", "updatedAt");
