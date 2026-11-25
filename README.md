@@ -10,6 +10,40 @@
 
 **我负责的工作**涵盖产品取舍、关键流程与接口设计、AI 辅助开发、代码审查、双端联调和云端验收。我把演示目标落实成可复验的检查，例如对照 API 核对 Agent 查到的订单 ID 和状态，检查确认前后商品价格，以及验证一个访客的变更对另一个访客不可见。
 
+## 在线实机与演示
+
+| 入口 | 可体验内容 |
+| --- | --- |
+| [C 端商城](https://soberclown.cn/shop/) | 浏览商品、领券、下单、模拟钱包支付、收货 |
+| [B 端运营后台](https://soberclown.cn/) | 商品与首页配置、订单履约、经营查询和 AI 运营助手 |
+| [完整演示视频（3 分钟）](./media/live/full-order-walkthrough.mp4?raw=true) | B/C 订单联动、Agent 识图查单与人工确认发货 |
+
+域名已解析，在线演示入口的 HTTPS 接入和公网复验待完成。现在可以先观看视频和实机截图。
+
+## 实机截图与演示视频
+
+[![播放拾光集市完整实机演示](./media/live/video-cover.jpg)](./media/live/full-order-walkthrough.mp4?raw=true)
+
+**[观看完整实机演示（3 分钟）](./media/live/full-order-walkthrough.mp4?raw=true)**。从首页轮播、商品分类与游客浏览开始。会员登录、加购结算后，管理员进入后台查看经营和商品管理，再定位同一笔订单。买家用模拟钱包支付。桌宠展示拖动、贴边和召回后，AI 助手识别订单截图，展开数据依据，再生成并确认模拟发货卡。最后由买家确认收货，回后台核对完整订单。
+
+**[观看商品与调价短片](./media/live/storefront-demo.mp4?raw=true)**。展示商品页面、B/C 订单联动，以及识别调价单后生成待确认的改价操作卡。
+
+| C 端支付后截图 | Agent 发货确认卡 | B 端最终订单详情 |
+| --- | --- | --- |
+| <img src="./media/live/order-paid.png" alt="C 端已支付、待发货的订单截图" width="230"> | <img src="./media/live/shipping-confirmation.jpg" alt="Agent 生成同一订单的模拟发货确认卡" width="430"> | <img src="./media/live/order-completed.jpg" alt="同一订单已完成，会员资料已脱敏" width="430"> |
+
+| C 端商城首页 | C 端商品详情 | C 端确认收货后 |
+| --- | --- | --- |
+| <img src="./media/live/storefront.png" alt="拾光集市商城首页与轮播" width="250"> | <img src="./media/live/product.png" alt="商城商品图片与详情" width="250"> | <img src="./media/live/order-received.png" alt="同一订单在商城显示已完成" width="250"> |
+
+| B 端查看待发货订单 | Agent 生成调价确认卡 |
+| --- | --- |
+| <img src="./media/live/order-admin.png" alt="后台同一笔已支付、待发货订单，会员字段已遮盖" width="520"> | <img src="./media/live/agent-confirm.png" alt="Agent 显示商品与原价、目标价，等待人工确认" width="520"> |
+
+| 商品分类 | Agent 订单查询依据 |
+| --- | --- |
+| <img src="./media/live/category.jpg" alt="C 端商品分类与商品列表" width="430"> | <img src="./media/live/agent-evidence.jpg" alt="展开同一笔订单的查询依据" width="520"> |
+
 ## 架构一 · 传统电商
 
 ```mermaid
@@ -45,8 +79,8 @@ B/C 两端访问同一套服务和业务数据。消费者按身份访问自己�
 
 ```mermaid
 flowchart LR
-    UI["B 端 Agent 对话"] -->|文字| Agent["DeepSeek · 意图与工具选择"]
-    UI -->|图片或语音| Input["百炼 · 识别或转写"]
+    UI["B 端 Agent 对话"] -->|文字| Agent["对话模型 · 意图与工具选择"]
+    UI -->|图片或语音| Input["多模态服务 · 识别或转写"]
     Input -->|识别文本| Agent
     Agent --> Tools["按当前账号权限开放注册工具"]
     Tools -->|查实时数据| API["业务服务 · 核验权限与数据范围"]
@@ -71,15 +105,7 @@ flowchart LR
 
 **现场演示建议**。上传一张包含商品编号和目标售价的调价单。让 Agent 查当前售价并准备调价，展开卡片核对商品、旧价和新价。先验证商品还保持原价，再点击确认并刷新商品详情。这个过程能同时展示识别、实时查询、人工确认和业务回查。
 
-## 演示入口
-
-| 入口 | 内容 | 状态 |
-| --- | --- | --- |
-| C 端商城 | 商品浏览、领券、下单、模拟钱包支付、收货 | 域名接入并完成公网验收后补充地址 |
-| B 端运营后台 | 卡片确认、订单发货、经营查询、商品与首页配置 | 域名接入并完成公网验收后补充地址 |
-| 介绍录屏 | 早期交易、运营后台与 Agent 演示 | [观看或下载 2 分 59 秒录屏](./media/project-intro.mp4?raw=true) |
-
-录屏来自早期版本。现行演示建议从 **C 端购买 → B 端查询同一订单并发货 → C 端收货 → B 端用调价单演示 Agent** 开始。同一浏览器会话打开 B/C 两个标签页可以查看同一份演示数据。
+上方完整实机演示对应当前本地界面。现场演示建议从 **C 端浏览、下单 → B 端定位订单 → C 端付款 → Agent 识图查单并经确认发货 → C 端收货 → B 端回查** 开始。在线入口开放后，同一浏览器会话打开 B/C 两个标签页可以查看同一份演示数据。
 
 ## 云端验证与演示隔离
 
@@ -87,9 +113,9 @@ flowchart LR
 | --- | --- |
 | 云服务器内部业务入口 | B/C 联动、模拟支付与收货、异步秒杀、双访客互不影响及回收恢复 |
 | 云端真实模型 | 商品照片识别、从调价单提取编号和小数价格、精确查询商品与订单、未知编号的处理、规则引用、调价确认及重复确认 |
-| 公网演示 | 等待域名接入与最终演示数据核对，随后从公网入口复验 |
+| 公网演示 | 域名已解析。HTTPS 连通性和公网端到端验证待完成。 |
 
-演示网关最多分配两个独立访客会话，每个会话从基准克隆一份业务数据库。访客可主动结束，空闲约 10 分钟会回收，单次最长 10 分钟。名额复用前重建演示数据，旧会话凭据随之失效。
+演示网关最多分配两个独立访客会话，每个会话从基准克隆一份业务数据库。访客可主动结束。公网演示采用每次固定 10 分钟的方案，实际回收行为以公网复验为准。名额复用前重建演示数据，旧会话凭据随之失效。
 
 ## 技术栈与仓库说明
 
@@ -98,7 +124,7 @@ flowchart LR
 | C 端与 B 端 | UniApp、Vue 3、Next.js、React、TypeScript |
 | 业务服务 | NestJS、Prisma、PostgreSQL |
 | 并发与媒体 | Redis、RabbitMQ、MinIO |
-| Agent | DeepSeek、通义百炼、LangChain、LangGraph、pgvector |
+| Agent | 对话模型、多模态服务、LangChain、LangGraph、pgvector |
 | 发布 | Docker Compose、CNB、腾讯云 TCR 与 TAT |
 
-本仓库用于项目展示，里面保留了早期公开源码，不含C端源码、agent api配置。现行 B/C 演示版本通过独立私密发布仓库管理。
+本仓库用于项目展示，保留早期公开源码。现行 B/C 演示版本和模型配置由独立的私有发布仓库及服务端环境管理。
