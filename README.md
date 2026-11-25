@@ -16,15 +16,15 @@
 | --- | --- |
 | [C 端商城](https://soberclown.cn/shop/) | 浏览商品、领券、下单、模拟钱包支付、收货 |
 | [B 端运营后台](https://soberclown.cn/) | 商品与首页配置、订单履约、经营查询和 AI 运营助手 |
-| [完整演示视频（3 分钟）](./media/live/full-order-walkthrough.mp4?raw=true) | B/C 订单联动、Agent 识图查单与人工确认发货 |
+| [完整演示视频（3 分钟）](https://mmmmmrclown.github.io/commerce-assistant-showcase/) | B/C 订单联动、Agent 识图查单与人工确认发货 |
 
 两个在线入口均已开放。首次访问会进入独立演示入口，开始体验后可登录 B 端，再通过同一浏览器打开 C 端商城。
 
 ## 实机截图与演示视频
 
-[![播放拾光集市完整实机演示](./media/live/video-cover.jpg)](./media/live/full-order-walkthrough.mp4?raw=true)
+[![播放拾光集市完整实机演示](./media/live/video-cover.jpg)](https://mmmmmrclown.github.io/commerce-assistant-showcase/)
 
-**[观看完整实机演示（3 分钟）](./media/live/full-order-walkthrough.mp4?raw=true)**。从首页轮播、商品分类与游客浏览开始。会员登录、加购结算后，管理员进入后台查看经营和商品管理，再定位同一笔订单。买家用模拟钱包支付。桌宠展示拖动、贴边和召回后，AI 助手识别订单截图，展开数据依据，再生成并确认模拟发货卡。最后由买家确认收货，回后台核对完整订单。
+**[在线播放完整实机演示（3 分钟）](https://mmmmmrclown.github.io/commerce-assistant-showcase/)**。从首页轮播、商品分类与游客浏览开始。会员登录、加购结算后，管理员进入后台查看经营和商品管理，再定位同一笔订单。买家用模拟钱包支付。桌宠展示拖动、贴边和召回后，AI 助手识别订单截图，展开数据依据，再生成并确认模拟发货卡。最后由买家确认收货，回后台核对完整订单。
 
 **[观看商品与调价短片](./media/live/storefront-demo.mp4?raw=true)**。展示商品页面、B/C 订单联动，以及识别调价单后生成待确认的改价操作卡。
 
@@ -46,22 +46,7 @@
 
 ## 架构一 · 传统电商
 
-```mermaid
-flowchart LR
-    C["C 端商城 · UniApp"] --> API["NestJS API · 登录与权限校验"]
-    B["B 端后台 · Next.js"] --> API
-    API --> Biz["商品、库存、会员、营销"]
-    API --> Tx["报价、订单、支付与履约"]
-    Biz --> DB[("PostgreSQL · 业务数据")]
-    Tx --> DB
-    Biz --> Media[("MinIO · 原图和缩略图")]
-    API --> Flash["秒杀准入"]
-    Flash --> Redis[("Redis · 原子预占与限购")]
-    Flash --> Request["秒杀请求与待投递事件 · Outbox"]
-    Request --> DB
-    Request --> MQ["RabbitMQ · 异步任务"]
-    MQ -->|消费并处理下单| Tx
-```
+![传统电商架构图，展示 B/C 两端、交易履约与秒杀异步链路](./media/architecture/commerce.png)
 
 B/C 两端访问同一套服务和业务数据。消费者按身份访问自己的订单和券包，运营人员按角色及区域、门店数据范围操作。商品原图和缩略图分别服务于 C 端详情与 B 端列表。支付、退款和履约使用模拟流程。
 
@@ -77,21 +62,7 @@ B/C 两端访问同一套服务和业务数据。消费者按身份访问自己�
 
 ## 架构二 · AI Agent
 
-```mermaid
-flowchart LR
-    UI["B 端 Agent 对话"] -->|文字| Agent["对话模型 · 意图与工具选择"]
-    UI -->|图片或语音| Input["多模态服务 · 识别或转写"]
-    Input -->|识别文本| Agent
-    Agent --> Tools["按当前账号权限开放注册工具"]
-    Tools -->|查实时数据| API["业务服务 · 核验权限与数据范围"]
-    Tools -->|查规则| KB[("独立知识库 · PostgreSQL + pgvector")]
-    Tools -->|申请变更| Draft["服务端生成操作卡 · 对象、参数、变更前后值"]
-    Draft --> Checkpoint["LangGraph · 保存检查点并等待批准"]
-    UI -->|用户点击确认| Checkpoint
-    Checkpoint --> Ledger["动作台账 · 校验版本、权限和执行状态"]
-    Ledger -->|复用现有业务逻辑| API
-    API --> DB[("PostgreSQL · 业务库")]
-```
+![AI Agent 架构图，展示多模态输入、知识检索、操作卡与人工确认](./media/architecture/agent.png)
 
 ### Agent 线的难点与实现
 
