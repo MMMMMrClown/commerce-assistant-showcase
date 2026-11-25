@@ -26,8 +26,6 @@
 
 **[在线播放完整实机演示（3 分钟）](https://mmmmmrclown.github.io/commerce-assistant-showcase/)**。从首页轮播、商品分类与游客浏览开始。会员登录、加购结算后，管理员进入后台查看经营和商品管理，再定位同一笔订单。买家用模拟钱包支付。桌宠展示拖动、贴边和召回后，AI 助手识别订单截图，展开数据依据，再生成并确认模拟发货卡。最后由买家确认收货，回后台核对完整订单。
 
-**[观看商品与调价短片](./media/live/storefront-demo.mp4?raw=true)**。展示商品页面、B/C 订单联动，以及识别调价单后生成待确认的改价操作卡。
-
 | C 端支付后截图 | Agent 发货确认卡 | B 端最终订单详情 |
 | --- | --- | --- |
 | <img src="./media/live/order-paid.png" alt="C 端已支付、待发货的订单截图" width="230"> | <img src="./media/live/shipping-confirmation.jpg" alt="Agent 生成同一订单的模拟发货确认卡" width="430"> | <img src="./media/live/order-completed.jpg" alt="同一订单已完成，会员资料已脱敏" width="430"> |
